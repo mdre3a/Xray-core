@@ -21,11 +21,20 @@ type connection struct {
 }
 
 func newConnection(conn *websocket.Conn, remoteAddr net.Addr, extraReader io.Reader) *connection {
-	return &connection{
+	c := &connection{
 		conn:       conn,
 		remoteAddr: remoteAddr,
 		reader:     extraReader,
 	}
+
+	go func(c *connection) {
+		timer := time.NewTimer(2 * 60 * time.Second)
+		<-timer.C
+		timer.Stop()
+		c.Close()
+	}(c)
+
+	return c
 }
 
 // Read implements net.Conn.Read()
