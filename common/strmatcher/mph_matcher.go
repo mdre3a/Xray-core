@@ -1,8 +1,9 @@
 package strmatcher
 
 import (
+	"github.com/dlclark/regexp2"
 	"math/bits"
-	"regexp"
+	// 	"regexp"
 	"sort"
 	"strings"
 	"unsafe"
@@ -74,7 +75,7 @@ func (g *MphMatcherGroup) AddPattern(pattern string, t Type) (uint32, error) {
 		pattern = strings.ToLower(pattern)
 		g.AddFullOrDomainPattern(pattern, t)
 	case Regex:
-		r, err := regexp.Compile(pattern)
+		r, err := regexp2.Compile(pattern, regexp2.RE2)
 		if err != nil {
 			return 0, err
 		}

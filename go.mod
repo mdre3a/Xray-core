@@ -4,6 +4,7 @@ go 1.24
 
 require (
 	github.com/cloudflare/circl v1.6.1
+	github.com/dlclark/regexp2 v1.11.5
 	github.com/ghodss/yaml v1.0.1-0.20220118164431-d8423dcdf344
 	github.com/golang/mock v1.7.0-rc.1
 	github.com/google/go-cmp v0.7.0
