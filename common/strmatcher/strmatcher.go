@@ -1,8 +1,6 @@
 package strmatcher
 
-import (
-	"regexp"
-)
+import "github.com/dlclark/regexp2"
 
 // Matcher is the interface to determine a string matches a pattern.
 type Matcher interface {
@@ -36,7 +34,7 @@ func (t Type) New(pattern string) (Matcher, error) {
 	case Domain:
 		return domainMatcher(pattern), nil
 	case Regex:
-		r, err := regexp.Compile(pattern)
+		r, err := regexp2.Compile(pattern, regexp2.RE2)
 		if err != nil {
 			return nil, err
 		}

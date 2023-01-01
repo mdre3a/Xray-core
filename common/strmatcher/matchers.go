@@ -1,7 +1,7 @@
 package strmatcher
 
 import (
-	"regexp"
+	"github.com/dlclark/regexp2"
 	"strings"
 )
 
@@ -40,11 +40,15 @@ func (m domainMatcher) String() string {
 }
 
 type regexMatcher struct {
-	pattern *regexp.Regexp
+	pattern *regexp2.Regexp
 }
 
 func (m *regexMatcher) Match(s string) bool {
-	return m.pattern.MatchString(s)
+	r, e := m.pattern.MatchString(s)
+	if e != nil {
+		return false
+	}
+	return r
 }
 
 func (m *regexMatcher) String() string {
