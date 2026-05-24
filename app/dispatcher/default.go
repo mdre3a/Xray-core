@@ -439,6 +439,7 @@ func (d *DefaultDispatcher) routedDispatch(ctx context.Context, link *transport.
 
 	routingLink := routing_session.AsRoutingContext(ctx)
 	inTag := routingLink.GetInboundTag()
+	ruleTag := ""
 	isPickRoute := 0
 	if forcedOutboundTag := session.GetForcedOutboundTagFromContext(ctx); forcedOutboundTag != "" {
 		ctx = session.SetForcedOutboundTagToContext(ctx, "")
@@ -457,6 +458,7 @@ func (d *DefaultDispatcher) routedDispatch(ctx context.Context, link *transport.
 			outTag := route.GetOutboundTag()
 			if h := d.ohm.GetHandler(outTag); h != nil {
 				isPickRoute = 2
+				ruleTag = route.GetRuleTag()
 				if route.GetRuleTag() == "" {
 					errors.LogInfo(ctx, "taking detour [", outTag, "] for [", destination, "]")
 				} else {
@@ -493,7 +495,11 @@ func (d *DefaultDispatcher) routedDispatch(ctx context.Context, link *transport.
 			} else if isPickRoute == 1 {
 				accessMessage.Detour = inTag + " ==> " + tag
 			} else if isPickRoute == 2 {
-				accessMessage.Detour = inTag + " -> " + tag
+				if ruleTag != "" {
+					accessMessage.Detour = inTag + " -(" + ruleTag + ")=> " + tag
+				} else {
+					accessMessage.Detour = inTag + " -> " + tag
+				}
 			} else {
 				accessMessage.Detour = inTag + " >> " + tag
 			}
